@@ -13,6 +13,8 @@ int redBrightness  = 0;
 int greenBrightness= 0;
 int blueBrightness = 0;
 int maxBrightness  = 50;
+boolean maxBrightnessClimbing = true;
+boolean brightnessChanged = false;
 
 const int MODE_PULSE     = 0;
 const int MODE_CYCLE     = 1;
@@ -71,6 +73,14 @@ void resetLeds() {
   redBrightness, greenBrightness, blueBrightness = 0;
 }
 
+void resetLeds(boolean soft) {
+  analogWrite(redPin,   0);
+  analogWrite(greenPin, 0);
+  analogWrite(bluePin,  0);
+  if (!soft) {
+    redBrightness, greenBrightness, blueBrightness = 0;
+  }
+}
 // START MODES
 void MODE_pulse() {
   if (modeChanged) {
@@ -107,8 +117,13 @@ void MODE_cycle() {
   if (modeChanged) {
     resetLeds();
   } else {
-    redBrightness = 10;
-    analogWrite(redPin, redBrightness);
+    redBrightness   = random(1, maxBrightness);
+    greenBrightness = random(1, maxBrightness);
+    blueBrightness  = random(1, maxBrightness);
+
+    analogWrite(redPin,   redBrightness);
+    analogWrite(greenPin, greenBrightness);
+    analogWrite(bluePin,  blueBrightness);
   }
 }
 
@@ -116,7 +131,7 @@ void MODE_redOnly() {
   if (modeChanged) {
     resetLeds();
   } else {
-    redBrightness = 50;
+    redBrightness = maxBrightness;
     analogWrite(redPin, redBrightness);
     analogWrite(greenPin, 0);
     analogWrite(bluePin, 0);
@@ -127,7 +142,7 @@ void MODE_greenOnly() {
   if (modeChanged) {
     resetLeds();
   } else {
-    greenBrightness = 50;
+    greenBrightness = maxBrightness;
     analogWrite(redPin,   0);
     analogWrite(greenPin, greenBrightness);
     analogWrite(bluePin,  0);
@@ -138,7 +153,7 @@ void MODE_blueOnly() {
   if (modeChanged) {
     resetLeds();
   } else {
-    blueBrightness = 50;
+    blueBrightness = maxBrightness;
     analogWrite(redPin,   0);
     analogWrite(greenPin, 0);
     analogWrite(bluePin,  blueBrightness);
@@ -149,9 +164,26 @@ void MODE_blueOnly() {
 void runMode() {
   // CHANGE BRIGHTNESS
   if (buttonHeld) {
-    // if (maxBrightness+1 > 255) {
-    //   maxBrightness--;
-    // }
+    brightnessChanged = true;
+    resetLeds(true);
+
+    if (maxBrightnessClimbing) {
+      if (maxBrightness+1 >= 255) {
+        maxBrightnessClimbing = false;
+      } else {
+        maxBrightness++;
+      }
+    } else {
+      if (maxBrightness-1 <= 0) {
+        maxBrightnessClimbing = true;
+      } else {
+        maxBrightness--;
+      }
+    }
+
+    analogWrite(redPin, maxBrightness);
+  } else {
+    brightnessChanged = false;
   }
 
   // UNKNOWN
@@ -168,25 +200,27 @@ void runMode() {
     modeIndex = 0;
   }
 
-  switch(modes[modeIndex]) {
-    case MODE_PULSE:
-      MODE_pulse();
-      break;
-    case MODE_CYCLE:
-      MODE_cycle();
-      break;
-    case MODE_REDONLY:
-      MODE_redOnly();
-      break;
-    case MODE_GREENONLY:
-      MODE_greenOnly();
-      break;
-    case MODE_BLUEONLY:
-      MODE_blueOnly();
-      break;
-    default:
-      analogWrite(redPin, 255);
-      break;
+  if (!brightnessChanged) {
+    switch(modes[modeIndex]) {
+      case MODE_PULSE:
+        MODE_pulse();
+        break;
+      case MODE_CYCLE:
+        MODE_cycle();
+        break;
+      case MODE_REDONLY:
+        MODE_redOnly();
+        break;
+      case MODE_GREENONLY:
+        MODE_greenOnly();
+        break;
+      case MODE_BLUEONLY:
+        MODE_blueOnly();
+        break;
+      default:
+        analogWrite(redPin, 255);
+        break;
+    }
   }
 
   if (modeChanged) { modeChanged = false; }
