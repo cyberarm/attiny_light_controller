@@ -25,6 +25,8 @@ int modes[5] = {MODE_PULSE, MODE_CYCLE, MODE_REDONLY, MODE_GREENONLY, MODE_BLUEO
 int modeIndex= 0;
 boolean modeChanged = false;
 boolean modeClimbing= true;
+long modeCycleLastChangeMs = 0;
+int modeCycleChangeAfterMs = 500;
 
 int buttonLastState   = LOW;
 int buttonIsHeldAfterMs = 200;
@@ -117,13 +119,16 @@ void MODE_cycle() {
   if (modeChanged) {
     resetLeds();
   } else {
-    redBrightness   = random(1, maxBrightness);
-    greenBrightness = random(1, maxBrightness);
-    blueBrightness  = random(1, maxBrightness);
+    if (millis()-modeCycleLastChangeMs > modeCycleChangeAfterMs) {
+      redBrightness   = random(1, maxBrightness);
+      greenBrightness = random(1, maxBrightness);
+      blueBrightness  = random(1, maxBrightness);
 
-    analogWrite(redPin,   redBrightness);
-    analogWrite(greenPin, greenBrightness);
-    analogWrite(bluePin,  blueBrightness);
+      analogWrite(redPin,   redBrightness);
+      analogWrite(greenPin, greenBrightness);
+      analogWrite(bluePin,  blueBrightness);
+      modeCycleLastChangeMs = millis();
+    }
   }
 }
 
