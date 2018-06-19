@@ -44,23 +44,23 @@ void handleButton(int button) {
       }
     } else {
       buttonPressed = true;
-      buttonHighMs = millis();
+      buttonHighMs  = millis();
     }
-
   } else {
     if (buttonLastState == HIGH) {
       buttonReleased = true;
     } else {
       buttonReleased = false;
     }
-    buttonHighMs = 0;
-    buttonHeld   = false;
   }
-
   buttonLastState = digitalRead(button);
 }
 
-void resetButtonPressed() {
+void resetButtonData() {
+   if (digitalRead(buttonPin) == LOW) {
+    buttonHighMs = 0;
+    buttonHeld   = false;
+  }
   buttonPressed = false;
 }
 
@@ -195,6 +195,6 @@ void runMode() {
 void loop() {
   handleButton(buttonPin);
   runMode();
-  resetButtonPressed();
+  resetButtonData();
   delay(delayInterval);
 }
