@@ -1,13 +1,17 @@
 #include <Arduino.h>
 
+// array indices, not pinouts
 int redPin    = 0;
 int greenPin  = 1;
 int bluePin   = 2;
-int buttonPin = 4;
+
+int buttonPin = 2; // pinout
+
+// http://www.technoblogy.com/show?LE0
+volatile uint8_t* port[] = {&OCR0A, &OCR0B, &OCR1B};
+int pin[] = {0, 1, 4};
 
 int delayInterval = 20;
-// COMMENT;
-
 
 int redBrightness  = 0;
 int greenBrightness= 0;
@@ -15,6 +19,7 @@ int blueBrightness = 0;
 int maxBrightness  = 50;
 boolean maxBrightnessClimbing = true;
 boolean brightnessChanged = false;
+int off = 0;
 
 const int MODE_PULSE     = 0;
 const int MODE_CYCLE     = 1;
@@ -34,14 +39,27 @@ long buttonHighMs   = 0;
 boolean buttonHeld, buttonPressed, buttonReleased  = false;
 
 void setup() {
-  pinMode(redPin,    OUTPUT);
-  pinMode(greenPin,  OUTPUT);
-  pinMode(bluePin,   OUTPUT);
+  pinMode(pin[redPin],    OUTPUT);
+  pinMode(pin[greenPin],  OUTPUT);
+  pinMode(pin[bluePin],   OUTPUT);
   pinMode(buttonPin, INPUT);
+
+  // http://www.technoblogy.com/show?LE0
+  // Configure counter/timer0 for fast PWM on PB0 and PB1
+  TCCR0A = 3<<COM0A0 | 3<<COM0B0 | 3<<WGM00;
+  TCCR0B = 0<<WGM02 | 3<<CS00; // Optional; already set
+  // Configure counter/timer1 for fast PWM on PB4
+  GTCCR = 1<<PWM1B | 3<<COM1B0;
+  TCCR1 = 3<<COM1A0 | 7<<CS10;
+}
+
+void setColor(int pin, int brightness) {
+  *port[pin] = 255 - brightness;
 }
 
 void handleButton(int button) {
-  if (digitalRead(button) == HIGH) {
+  int buttonCurrentState = digitalRead(button);
+  if (buttonCurrentState == HIGH) {
     if (buttonLastState == HIGH) {
       if (millis()-buttonHighMs > buttonIsHeldAfterMs) {
         buttonHeld = true;
@@ -57,7 +75,8 @@ void handleButton(int button) {
       buttonReleased = false;
     }
   }
-  buttonLastState = digitalRead(button);
+
+  buttonLastState = buttonCurrentState;
 }
 
 void resetButtonData() {
@@ -69,18 +88,18 @@ void resetButtonData() {
 }
 
 void resetLeds() {
-  analogWrite(redPin,   0);
-  analogWrite(greenPin, 0);
-  analogWrite(bluePin,  0);
-  redBrightness, greenBrightness, blueBrightness = 0;
+  setColor(redPin,   off);
+  setColor(greenPin, off);
+  setColor(bluePin,  off);
+  redBrightness, greenBrightness, blueBrightness = off;
 }
 
 void resetLeds(boolean soft) {
-  analogWrite(redPin,   0);
-  analogWrite(greenPin, 0);
-  analogWrite(bluePin,  0);
+  setColor(redPin,   off);
+  setColor(greenPin, off);
+  setColor(bluePin,  off);
   if (!soft) {
-    redBrightness, greenBrightness, blueBrightness = 0;
+    redBrightness, greenBrightness, blueBrightness = off;
   }
 }
 // START MODES
@@ -99,7 +118,7 @@ void MODE_pulse() {
       }
 
     } else {
-      if (redBrightness <= 0) {
+      if (redBrightness <= 1) {
         modeClimbing = true;
         redBrightness, greenBrightness, blueBrightness = maxBrightness;
       } else {
@@ -109,9 +128,9 @@ void MODE_pulse() {
       }
     }
 
-    analogWrite(redPin,   redBrightness);
-    analogWrite(greenPin, greenBrightness);
-    analogWrite(bluePin,  blueBrightness);
+    setColor(redPin,   redBrightness);
+    setColor(greenPin, greenBrightness);
+    setColor(bluePin,  blueBrightness);
   }
 }
 
@@ -124,9 +143,9 @@ void MODE_cycle() {
       greenBrightness = random(1, maxBrightness);
       blueBrightness  = random(1, maxBrightness);
 
-      analogWrite(redPin,   redBrightness);
-      analogWrite(greenPin, greenBrightness);
-      analogWrite(bluePin,  blueBrightness);
+      setColor(redPin,   redBrightness);
+      setColor(greenPin, greenBrightness);
+      setColor(bluePin,  blueBrightness);
       modeCycleLastChangeMs = millis();
     }
   }
@@ -137,9 +156,9 @@ void MODE_redOnly() {
     resetLeds();
   } else {
     redBrightness = maxBrightness;
-    analogWrite(redPin, redBrightness);
-    analogWrite(greenPin, 0);
-    analogWrite(bluePin, 0);
+    setColor(redPin, redBrightness);
+    setColor(greenPin, off);
+    setColor(bluePin, off);
   }
 }
 
@@ -148,9 +167,9 @@ void MODE_greenOnly() {
     resetLeds();
   } else {
     greenBrightness = maxBrightness;
-    analogWrite(redPin,   0);
-    analogWrite(greenPin, greenBrightness);
-    analogWrite(bluePin,  0);
+    setColor(redPin,   off);
+    setColor(greenPin, greenBrightness);
+    setColor(bluePin,  off);
   }
 }
 
@@ -159,9 +178,9 @@ void MODE_blueOnly() {
     resetLeds();
   } else {
     blueBrightness = maxBrightness;
-    analogWrite(redPin,   0);
-    analogWrite(greenPin, 0);
-    analogWrite(bluePin,  blueBrightness);
+    setColor(redPin,   off);
+    setColor(greenPin, off);
+    setColor(bluePin,  blueBrightness);
   }
 }
 // END MODES
@@ -186,7 +205,7 @@ void runMode() {
       }
     }
 
-    analogWrite(redPin, maxBrightness);
+    setColor(redPin, maxBrightness);
   } else {
     brightnessChanged = false;
   }
@@ -223,7 +242,7 @@ void runMode() {
         MODE_blueOnly();
         break;
       default:
-        analogWrite(redPin, 255);
+        setColor(redPin, 255);
         break;
     }
   }
