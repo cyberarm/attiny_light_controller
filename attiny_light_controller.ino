@@ -26,7 +26,8 @@ const int MODE_CYCLE     = 1;
 const int MODE_REDONLY   = 2;
 const int MODE_GREENONLY = 3;
 const int MODE_BLUEONLY  = 4;
-int modes[5] = {MODE_PULSE, MODE_CYCLE, MODE_REDONLY, MODE_GREENONLY, MODE_BLUEONLY};
+const int MODE_MORSECODE = 5;
+int modes[6] = {MODE_PULSE, MODE_CYCLE, MODE_REDONLY, MODE_GREENONLY, MODE_BLUEONLY, MODE_MORSECODE};
 int modeIndex= 0;
 boolean modeChanged = false;
 boolean modeClimbing= true;
@@ -102,88 +103,6 @@ void resetLeds(boolean soft) {
     redBrightness, greenBrightness, blueBrightness = off;
   }
 }
-// START MODES
-void MODE_pulse() {
-  if (modeChanged) {
-    resetLeds();
-  } else {
-    if (modeClimbing) {
-      if (redBrightness >= maxBrightness) {
-        modeClimbing = false;
-        redBrightness, greenBrightness, blueBrightness = maxBrightness;
-      } else {
-        redBrightness++;
-        greenBrightness++;
-        blueBrightness++;
-      }
-
-    } else {
-      if (redBrightness <= 1) {
-        modeClimbing = true;
-        redBrightness, greenBrightness, blueBrightness = maxBrightness;
-      } else {
-        redBrightness--;
-        greenBrightness--;
-        blueBrightness--;
-      }
-    }
-
-    setColor(redPin,   redBrightness);
-    setColor(greenPin, greenBrightness);
-    setColor(bluePin,  blueBrightness);
-  }
-}
-
-void MODE_cycle() {
-  if (modeChanged) {
-    resetLeds();
-  } else {
-    if (millis()-modeCycleLastChangeMs > modeCycleChangeAfterMs) {
-      redBrightness   = random(1, maxBrightness);
-      greenBrightness = random(1, maxBrightness);
-      blueBrightness  = random(1, maxBrightness);
-
-      setColor(redPin,   redBrightness);
-      setColor(greenPin, greenBrightness);
-      setColor(bluePin,  blueBrightness);
-      modeCycleLastChangeMs = millis();
-    }
-  }
-}
-
-void MODE_redOnly() {
-  if (modeChanged) {
-    resetLeds();
-  } else {
-    redBrightness = maxBrightness;
-    setColor(redPin, redBrightness);
-    setColor(greenPin, off);
-    setColor(bluePin, off);
-  }
-}
-
-void MODE_greenOnly() {
-  if (modeChanged) {
-    resetLeds();
-  } else {
-    greenBrightness = maxBrightness;
-    setColor(redPin,   off);
-    setColor(greenPin, greenBrightness);
-    setColor(bluePin,  off);
-  }
-}
-
-void MODE_blueOnly() {
-  if (modeChanged) {
-    resetLeds();
-  } else {
-    blueBrightness = maxBrightness;
-    setColor(redPin,   off);
-    setColor(greenPin, off);
-    setColor(bluePin,  blueBrightness);
-  }
-}
-// END MODES
 
 void runMode() {
   // CHANGE BRIGHTNESS
@@ -240,6 +159,9 @@ void runMode() {
         break;
       case MODE_BLUEONLY:
         MODE_blueOnly();
+        break;
+      case MODE_MORSECODE:
+        MODE_morsecode();
         break;
       default:
         setColor(redPin, 255);
