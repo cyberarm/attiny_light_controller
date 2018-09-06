@@ -1,11 +1,11 @@
-char morseCodeString[] = "HELLO WORLD ";
+char morseCodeString[] = "HELLO WORLD AR "; // AR -> End of message. always append a SPACE to have a pause inserted.
 boolean morseCodeDie = false;
 
 int morseIndex, morseListIndex = 0;
 int lastMorseListIndex = -1;
 long morseUpdateMs = 0;
 
-int DOT = 100; // ms
+int DOT = 250; // ms
 int DASH= DOT*3;
 int SHORT=DOT*5;
 int MEDIUM=DOT*7;
@@ -95,6 +95,7 @@ void animateMorseCode() {
           lastMorseListIndex = morseListIndex;
         }
       } else {
+        morseIndex++;
         morseListIndex = 0;
         lastMorseListIndex = -1;
       }
