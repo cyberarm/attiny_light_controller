@@ -5,7 +5,7 @@ int redPin    = 0;
 int greenPin  = 1;
 int bluePin   = 2;
 
-int buttonPin = 2; // pinout
+int buttonPin = 3; // pinout
 
 // http://www.technoblogy.com/show?LE0
 volatile uint8_t* port[] = {&OCR0A, &OCR0B, &OCR1B};
