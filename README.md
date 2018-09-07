@@ -13,6 +13,12 @@ GND   [     ] 0
 * Pin 2 -> PWM Output for Red LED(s)
 * Pin 1 -> PWM Output for Green LED(s)
 
+## Button
+### Press and Release
+Switches to next mode
+### Press and Hold
+Change max brightness of LEDs (Red LED(s) will cycle up and down from 1 to 254 and back, to indictate brightness)
+
 ## Modes
 ### Pulse
 Fades leds in and out.
