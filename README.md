@@ -9,9 +9,9 @@ GND   [     ] 0
 ```
 
 * Pin 3 -> Button Input
-* Pin 4 -> PWM Blue LED(s)
-* Pin 2 -> PWM Red LED(s)
-* Pin 1 -> PWM Green LED(s)
+* Pin 4 -> PWM Output for Blue LED(s)
+* Pin 2 -> PWM Output for Red LED(s)
+* Pin 1 -> PWM Output for Green LED(s)
 
 ## Modes
 ### Pulse
