@@ -84,6 +84,7 @@ void animateMorseCode() {
         morseListIndex = 0;
         lastMorseListIndex = -1;
         resetLeds();
+        morseUpdateMs = (millis() + DASH);
       }
     }
 
