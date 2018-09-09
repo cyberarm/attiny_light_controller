@@ -31,7 +31,7 @@ Non-animated, only has green LED on.
 ### Blue Only
 Non-animated, only has blue LED on.
 ### Morse Code
-Flash morse code. Non-blocking :happy:
+Flash morse code. Non-blocking :smile:
 
 Message can be set in `morse_code.ino` in `morseCodeString[]` variable
 
