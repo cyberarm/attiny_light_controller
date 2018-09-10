@@ -4,13 +4,12 @@ int morseIndex, morseListIndex = 0;
 int lastMorseListIndex = -1;
 long morseUpdateMs = 0;
 int activeArraySize = 0;
+int activeCode[5];
 
 int DOT = 250; // ms
 int DASH= DOT*3;
 int SHORT=DOT*5;
 int MEDIUM=DOT*7;
-
-int morseCode_0[] = {DASH, DASH, DASH, DASH, DASH};
 
 void MODE_morsecode() {
   if (modeChanged) {
@@ -40,7 +39,7 @@ void animateMorseCode() {
           morseListIndex++;
         } else {
           morseLedsOn();
-          morseUpdateMs = (millis() + getMorseCodeForChar(morseCodeString[morseIndex])[morseListIndex]);
+          morseUpdateMs = (millis()+getMorseCodeForChar(morseCodeString[morseIndex])[morseListIndex]);
           lastMorseListIndex = morseListIndex;
         }
       } else {
@@ -64,212 +63,326 @@ void morseLedsOn() {
   setColor(bluePin, maxBrightness);
 }
 
-int morseSize(char *list)
-{
-  int size = 0;
-
-  for (int i = 0; i < 16; i++)
-  {
-    if (list[i] == '.') {
-      break;
-    }
-    else
-    {
-      size++;
-    }
-  }
-
-  return size;
-}
-
 int *getMorseCodeForChar(char str) {
   switch(str) {
-    case 'A': {
+    case 'A':{
       activeArraySize = 2;
-      int code[] = {DOT, DASH};
-      return code;
+      activeCode[0] = DOT;
+      activeCode[1] = DASH;
+      return activeCode;
       break;
     }
     case 'B':{
       activeArraySize = 4;
-      int code[] = {DASH, DOT, DOT, DOT};
-      return code;
+      activeCode[0] = DASH;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      activeCode[3] = DOT;
+      return activeCode;
+      break;
     }
     case 'C':{
       activeArraySize = 4;
-      int code[] = {DASH, DOT, DASH, DOT};
-      return code;
+      activeCode[0] = DASH;
+      activeCode[1] = DOT;
+      activeCode[2] = DASH;
+      activeCode[3] = DOT;
+      return activeCode;
+      break;
     }
     case 'D':{
       activeArraySize = 3;
-      int code[] = {DASH, DOT, DOT};
+      activeCode[0] = DASH;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      return activeCode;
       break;
     }
     case 'E':{
       activeArraySize = 1;
-      int code[] = {DOT};
+      activeCode[0] = DOT;
+
+      return activeCode;
       break;
     }
     case 'F':{
       activeArraySize = 4;
-      int code[] = {DOT, DOT, DASH, DOT};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DASH;
+      activeCode[3] = DOT;
+      return activeCode;
       break;
     }
     case 'G':{
       activeArraySize = 3;
-      int code[] = {DASH, DASH, DOT};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      activeCode[2] = DOT;
+      return activeCode;
       break;
     }
     case 'H':{
       activeArraySize = 4;
-      int code[] = {DOT, DOT, DOT, DOT};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      activeCode[3] = DOT;
+      return activeCode;
       break;
     }
     case 'I':{
       activeArraySize = 2;
-      int code[] = {DOT, DOT};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      return activeCode;
       break;
     }
     case 'J':{
       activeArraySize = 4;
-      int code[] = {DOT, DASH, DASH, DASH};
+      activeCode[0] = DOT;
+      activeCode[1] = DASH;
+      activeCode[2] = DASH;
+      activeCode[3] = DASH;
+      return activeCode;
       break;
     }
     case 'K':{
       activeArraySize = 3;
-      int code[] = {DASH, DOT, DASH};
+      activeCode[0] = DASH;
+      activeCode[1] = DOT;
+      activeCode[2] = DASH;
+      return activeCode;
       break;
     }
     case 'L':{
       activeArraySize = 4;
-      int code[] = {DOT, DASH, DOT, DOT};
+      activeCode[0] = DOT;
+      activeCode[1] = DASH;
+      activeCode[2] = DOT;
+      activeCode[3] = DOT;
+      return activeCode;
       break;
     }
     case 'M':{
       activeArraySize = 2;
-      int code[] = {DASH, DASH};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      return activeCode;
       break;
     }
     case 'N':{
       activeArraySize = 2;
-      int code[] = {DASH, DOT};
+      activeCode[0] = DASH;
+      activeCode[1] = DOT;
+      return activeCode;
       break;
     }
     case 'O':{
       activeArraySize = 3;
-      int code[] = {DASH, DASH, DASH};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      activeCode[2] = DASH;
+      return activeCode;
       break;
     }
     case 'P':{
       activeArraySize = 4;
-      int code[] = {DOT, DASH, DASH, DOT};
+      activeCode[0] = DOT;
+      activeCode[1] = DASH;
+      activeCode[2] = DASH;
+      activeCode[3] = DOT;
+      return activeCode;
       break;
     }
     case 'Q':{
       activeArraySize = 4;
-      int code[] = {DASH, DASH, DOT, DASH};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      activeCode[2] = DOT;
+      activeCode[3] = DASH;
+      return activeCode;
       break;
     }
     case 'R':{
       activeArraySize = 3;
-      int code[] = {DOT, DASH, DOT};
+      activeCode[0] = DOT;
+      activeCode[1] = DASH;
+      activeCode[2] = DOT;
+      return activeCode;
       break;
     }
     case 'S':{
       activeArraySize = 3;
-      int code[] = {DOT, DOT, DOT};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      return activeCode;
       break;
     }
     case 'T':{
       activeArraySize = 1;
-      int code[] = {DASH};
+      activeCode[0] = DASH;
+      return activeCode;
       break;
     }
     case 'U':{
       activeArraySize = 3;
-      int code[] = {DOT, DOT, DASH};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DASH;
+      return activeCode;
       break;
     }
     case 'V':{
       activeArraySize = 4;
-      int code[] = {DOT, DOT, DOT, DASH};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      activeCode[3] = DASH;
+      return activeCode;
       break;
     }
     case 'W':{
       activeArraySize = 3;
-      int code[] = {DOT, DASH, DASH};
+      activeCode[0] = DOT;
+      activeCode[1] = DASH;
+      activeCode[2] = DASH;
+      return activeCode;
       break;
     }
     case 'X':{
       activeArraySize = 4;
-      int code[] = {DASH, DOT, DOT, DASH};
+      activeCode[0] = DASH;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      activeCode[3] = DASH;
+      return activeCode;
       break;
     }
     case 'Y':{
       activeArraySize = 4;
-      int code[] = {DASH, DOT, DASH, DASH};
+      activeCode[0] = DASH;
+      activeCode[1] = DOT;
+      activeCode[2] = DASH;
+      activeCode[3] = DASH;
+      return activeCode;
       break;
     }
     case 'Z':{
       activeArraySize = 4;
-      int code[] = {DASH, DASH, DOT, DOT};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      activeCode[2] = DOT;
+      activeCode[3] = DOT;
+      return activeCode;
       break;
     }
 
     case '1':{
       activeArraySize = 5;
-      int code[] = {DOT, DASH, DASH, DASH, DASH};
+      activeCode[0] = DOT;
+      activeCode[1] = DASH;
+      activeCode[2] = DASH;
+      activeCode[3] = DASH;
+      activeCode[4] = DASH;
+      return activeCode;
       break;
     }
     case '2':{
       activeArraySize = 5;
-      int code[] = {DOT, DOT, DASH, DASH, DASH};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DASH;
+      activeCode[3] = DASH;
+      activeCode[4] = DASH;
+      return activeCode;
       break;
     }
     case '3':{
       activeArraySize = 5;
-      int code[] = {DOT, DOT, DOT, DASH, DASH};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      activeCode[3] = DASH;
+      activeCode[4] = DASH;
+      return activeCode;
       break;
     }
     case '4':{
       activeArraySize = 5;
-      int code[] = {DOT, DOT, DOT, DOT, DASH};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      activeCode[3] = DOT;
+      activeCode[4] = DASH;
+      return activeCode;
       break;
     }
     case '5':{
       activeArraySize = 5;
-      int code[] = {DOT, DOT, DOT, DOT, DOT};
+      activeCode[0] = DOT;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      activeCode[3] = DOT;
+      activeCode[4] = DOT;
+      return activeCode;
       break;
     }
     case '6':{
       activeArraySize = 5;
-      int code[] = {DASH, DOT, DOT, DOT, DOT};
+      activeCode[0] = DASH;
+      activeCode[1] = DOT;
+      activeCode[2] = DOT;
+      activeCode[3] = DOT;
+      activeCode[4] = DOT;
+      return activeCode;
       break;
     }
     case '7':{
       activeArraySize = 5;
-      int code[] = {DASH, DASH, DOT, DOT, DOT};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      activeCode[2] = DOT;
+      activeCode[3] = DOT;
+      activeCode[4] = DOT;
+      return activeCode;
       break;
     }
     case '8':{
       activeArraySize = 5;
-      int code[] = {DASH, DASH, DASH, DOT, DOT};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      activeCode[2] = DASH;
+      activeCode[3] = DOT;
+      activeCode[4] = DOT;
+      return activeCode;
       break;
     }
     case '9':{
       activeArraySize = 5;
-      int code[] = {DASH, DASH, DASH, DASH, DOT};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      activeCode[2] = DASH;
+      activeCode[3] = DASH;
+      activeCode[4] = DOT;
+      return activeCode;
       break;
     }
     case '0':{
       activeArraySize = 5;
-      int code[] = {DASH, DASH, DASH, DASH, DASH};
+      activeCode[0] = DASH;
+      activeCode[1] = DASH;
+      activeCode[2] = DASH;
+      activeCode[3] = DASH;
+      activeCode[4] = DASH;
+      return activeCode;
       break;
     }
 
     default:
       activeArraySize = 0;
-      return {};
+      return activeCode;
       break;
   }
 }
