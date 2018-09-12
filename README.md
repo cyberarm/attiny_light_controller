@@ -10,8 +10,8 @@ GND   [     ] 0
 
 * Pin 3 -> Button Input
 * Pin 4 -> PWM Output for Blue LED(s)
-* Pin 2 -> PWM Output for Red LED(s)
 * Pin 1 -> PWM Output for Green LED(s)
+* Pin 0 -> PWM Output for Red LED(s)
 
 ## Button
 ### Press and Release
